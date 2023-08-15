@@ -25,6 +25,7 @@ public class SmartBanking {
         // Arrays
         String[] accId = new String[0];
         String[] names = new String[0];
+        Double[] deposits = new Double[0];
 
         String screen = DASHBOARD;
 
@@ -114,30 +115,105 @@ public class SmartBanking {
                     accId = newaccIds;
                     names = newCustomerNames;
 
-                    do{
-                        valid=true;
+                    do {
+                        valid = true;
                         System.out.print("\tEnter Initial Deposit: ");
-                        double deposit=SCANNER.nextDouble();
+                        double deposit = SCANNER.nextDouble();
                         SCANNER.nextLine();
 
-                        if(deposit<5000)
-                        {
-                            System.out.printf("\t%sInitial deposit should be more than 5000%s\n", COLOR_RED_BOLD, RESET);
-                            valid=false;
+                        if (deposit < 5000) {
+                            System.out.printf("\t%sInitial deposit should be more than 5000%s\n", COLOR_RED_BOLD,
+                                    RESET);
+                            valid = false;
                         }
 
-                    }while(!valid);
+                        Double[] newDeposits = new Double[deposits.length + 1];
+                        for (int i = 0; i < deposits.length; i++) {
+                            newDeposits[i] = deposits[i];
 
+                        }
+                        newDeposits[newDeposits.length - 1] = deposit;
+                        deposits = newDeposits;
+
+
+                    } while (!valid);
 
                     System.out.println();
-                    System.out.printf(SUCCESS_MSG, 
-                    String.format("%s:%s has been saved successfully", id, name));
+                    System.out.printf(SUCCESS_MSG,
+                            String.format("%s:%s has been saved successfully", id, name));
                     System.out.print("\tDo you want to continue adding (Y/n)? ");
                     if (SCANNER.nextLine().strip().toUpperCase().equals("Y"))
                         continue;
                     screen = DASHBOARD;
-
                     break;
+
+                case DEPOSIT_MONEY:
+
+                    do {
+                        double amount;
+                        valid = true;
+                        System.out.print("\tEnter A/C Number: ");
+                        id = SCANNER.nextLine().toUpperCase().strip();
+                        if (id.isBlank()) {
+                            System.out.printf(ERROR_MSG, "ID can't be empty");
+                            valid = false;
+                        } else if (!id.startsWith("SDB-") || id.length() < 5) {
+                            System.out.printf(ERROR_MSG, "Invalid ID format");
+                            valid = false;
+                        } else {
+                            String number = id.substring(4);
+                            for (int i = 0; i < number.length(); i++) {
+                                if (!Character.isDigit(number.charAt(i))) {
+                                    System.out.printf(ERROR_MSG, "Invalid ID format");
+                                    valid = false;
+                                    break;
+                                }
+                            }
+                            // for (int i = 0; i < accId.length; i++) {
+                            //     if (accId[i].equals(id)) {
+                            //         System.out.printf(ERROR_MSG, "Account Number already exists");
+                            //         valid = false;
+                            //         break;
+                            //     }
+                            // }
+
+                            
+
+                            double currentBalance=0;
+                            int index=0;
+                            for (int i = 0; i < accId.length; i++) {
+                                if (accId[i].equals(id)) {
+                                    currentBalance = deposits[i];
+                                    index=i;
+                                }
+                            }
+                             System.out.printf("\tCurrent Balance: Rs:%,.2f \n",currentBalance);
+
+                             do{
+                            valid=true;
+                             System.out.print("\tEnter Deposit Amount: ");
+                            
+                            amount = SCANNER.nextDouble();
+                            SCANNER.nextLine();
+
+                             if (amount < 500) {
+                            System.out.printf("\t%sInsufficient Amount.Amount should be more 500/=%s\n", COLOR_RED_BOLD,
+                                    RESET);
+                            valid = false;
+                        }
+                        }while(!valid);
+                        deposits[index]+=amount;
+                        System.out.printf("\tCurrent Balance: Rs:%,.2f \n",deposits[index]);
+
+
+
+                            System.out.print("\tDo you want to continue adding (Y/n)? ");
+                            if (SCANNER.nextLine().strip().toUpperCase().equals("Y"))
+                                continue;
+                            screen = DASHBOARD;
+                            break;
+                        }
+                    } while (!valid);
 
             }
 
