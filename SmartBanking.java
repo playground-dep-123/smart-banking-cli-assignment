@@ -366,6 +366,83 @@ public class SmartBanking {
                             break;
                         }
                     } while (!valid);
+
+//Delete Account
+                    case DELETE_AC:
+                Double[] newDeposits;
+                    int index = 0;
+                    // ID Validation
+                    do {
+                        valid = true;
+                        System.out.print("\tEnter the A/C Number: ");
+                        id = SCANNER.nextLine().toUpperCase().strip();
+                        if (id.isBlank()){
+                            System.out.printf(ERROR_MSG, "ID can't be empty");
+                            valid = false;
+                        }else if (!id.startsWith("SDB-") || id.length() < 5){
+                            System.out.printf(ERROR_MSG, "Invalid ID format");
+                            valid = false;
+                        }else{
+                            String number = id.substring(4);
+                            for (int i = 0; i < number.length(); i++) {
+                                if (!Character.isDigit(number.charAt(i))){
+                                    System.out.printf(ERROR_MSG, "Invalid ID format");
+                                    valid = false;
+                                    break;
+                                }
+                            }
+                            boolean exists = false;
+                            for (int i = 0; i < accId.length; i++) {
+                                if (accId[i].equals(id)){
+                                    index = i;
+                                    exists = true;
+                                    break;
+                                }
+                            }    
+                            if (!exists){
+                                valid = false;
+                                System.out.printf(ERROR_MSG, "Account does not exist");
+                            }
+                        }
+                        if (!valid) {
+                            System.out.print("\n\tDo you want to try again? (Y/n)");
+                            if (!SCANNER.nextLine().strip().toUpperCase().equals("Y")){
+                                screen = DASHBOARD;
+                                continue;
+                            }
+                            System.out.println();
+                        }
+                    }while (!valid);
+
+                    newaccIds = new String[accId.length - 1];
+                    newCustomerNames = new String[names.length-1];
+                    newDeposits=new Double[accId.length-1];
+
+                    for (int i = 0; i < accId.length; i++) {
+                        if (i < index){
+                            newaccIds[i] = accId[i];
+                            newCustomerNames[i] = names[i];
+                            newDeposits[i]=deposits[i];
+                        }else if (i == index){
+                            continue;
+                        }else{
+                            newaccIds[i - 1] = accId[i];
+                            newCustomerNames[i - 1] = names[i];
+                            newDeposits[i-1]=deposits[i];
+                        }
+                    }
+
+                    accId = newaccIds;
+                    names = newCustomerNames;
+                    deposits=newDeposits;
+
+                    System.out.println();
+                    System.out.printf(SUCCESS_MSG, 
+                        String.format("%s has been deleted successfully", id));
+                    System.out.print("\tDo you want to continue adding (Y/n)? ");
+                    if (SCANNER.nextLine().strip().toUpperCase().equals("Y")) continue;
+                    screen = DASHBOARD;
+                    break;
                 }
             
 
