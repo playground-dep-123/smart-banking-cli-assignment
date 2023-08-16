@@ -1,4 +1,5 @@
 
+
 import java.util.Scanner;
 
 public class SmartBanking {
@@ -116,29 +117,37 @@ public class SmartBanking {
                     accId = newaccIds;
                     names = newCustomerNames;
 
+                    double deposit;
                     do {
                         valid = true;
                         System.out.print("\tEnter Initial Deposit: ");
-                        double deposit = SCANNER.nextDouble();
+                        deposit = SCANNER.nextDouble();
                         SCANNER.nextLine();
+                       
+                       
+                       
+                     
 
+                       
                         if (deposit < 5000) {
                             System.out.printf("\t%sInitial deposit should be more than 5000%s\n", COLOR_RED_BOLD,
                                     RESET);
                             valid = false;
+                          
+                            
                         }
                         
     
 
-                        Double[] newDeposits = new Double[deposits.length + 1];
-                        for (int i = 0; i < deposits.length; i++) {
-                            newDeposits[i] = deposits[i];
-
-                        }
-                        newDeposits[newDeposits.length - 1] = deposit;
-                        deposits = newDeposits;
-
+                        
                     } while (!valid);
+                    Double[] newDeposits = new Double[deposits.length + 1];
+                    for (int i = 0; i < deposits.length; i++) {
+                        newDeposits[i] = deposits[i];
+
+                    }
+                    newDeposits[newDeposits.length - 1] = deposit;
+                    deposits = newDeposits;
 
                     System.out.println();
                     System.out.printf(SUCCESS_MSG,
